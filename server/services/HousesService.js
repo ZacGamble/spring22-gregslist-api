@@ -1,26 +1,35 @@
 import { dbContext } from '../db/DbContext'
-import { BadRequest } from '../utils/Errors'
+import { BadRequest, Forbidden } from '../utils/Errors'
 
 class HousesService {
-    
-    async getById(id) {
-        const car = await dbContext.Houses.findById(id)
-        if (!car) {
-            throw new BadRequest('Invalid Id')
-        }
+  async remove(id) {
+    const deletedHouse = await dbContext.Houses.findByIdAndDelete(id)
+    return deletedHouse
+  }
+
+  async getById(id) {
+    const car = await dbContext.Houses.findById(id)
+    if (!car) {
+      throw new BadRequest('Invalid Id')
     }
-    
-    async create(body) {
-        const house = await dbContext.Houses.create(body)
-        return house
+    return car
+  }
+
+  async create(body) {
+    const house = await dbContext.Houses.create(body)
+    return house
+  }
+
+  async edit(update) {
+    const original = await this.getById(update.id)
+    if (original.creatorId.toString() !== update.creatorId) {
+      throw new Forbidden('Invalid access')
     }
-    edit(body) {
-const original = await this.getById(update.id)
-if(original.creatorId.toString() !== update.creatorId)
-    }
+    original.year = update.year || original.year
+  }
 
   async getAll() {
-    return await dbContext.Houses.find({});
+    return await dbContext.Houses.find({})
   }
 }
 

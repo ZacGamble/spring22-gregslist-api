@@ -25,6 +25,7 @@ export class HousesController extends BaseController {
 
   async getById(req, res, next) {
     try {
+      // req.body.id = req.params.id
       const house = await housesService.getById(req.params.id)
       return res.send(house)
     } catch (error) {
@@ -49,7 +50,18 @@ export class HousesController extends BaseController {
       const house = await housesService.edit(req.body)
       return res.send(house)
     } catch (error) {
+      next(error)
+    }
+  }
 
+  async remove(req, res, next) {
+    try {
+      req.body.id = req.params.id
+      const removedHouse = await housesService.remove(req.params.id)
+      return removedHouse
+    } catch (error) {
+      // logger.error(error)
+      // Pop.toast(error.message, 'error')
     }
   }
 }
