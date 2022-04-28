@@ -56,12 +56,11 @@ export class HousesController extends BaseController {
 
   async remove(req, res, next) {
     try {
-      req.body.id = req.params.id
+      // req.body.id = req.params.id
       const removedHouse = await housesService.remove(req.params.id)
-      return removedHouse
+      return res.send(removedHouse)
     } catch (error) {
-      // logger.error(error)
-      // Pop.toast(error.message, 'error')
+      window.Error('Error')
     }
   }
 }
